@@ -12,15 +12,12 @@ struct Stg_Stochastic_EURUSD_M1_Params : Stg_Stochastic_Params {
     Stochastic_Period = 32;
     Stochastic_Applied_Price = 3;
     Stochastic_Shift = 0;
-    Stochastic_TrailingStopMethod = 6;
-    Stochastic_TrailingProfitMethod = 11;
+    Stochastic_SignalOpenMethod = 0;
     Stochastic_SignalOpenLevel = 36;
-    Stochastic_SignalBaseMethod = 0;
-    Stochastic_SignalOpenMethod1 = 0;
-    Stochastic_SignalOpenMethod2 = 0;
+    Stochastic_SignalCloseMethod = 0;
     Stochastic_SignalCloseLevel = 36;
-    Stochastic_SignalCloseMethod1 = 0;
-    Stochastic_SignalCloseMethod2 = 0;
+    Stochastic_PriceLimitMethod = 0;
+    Stochastic_PriceLimitLevel = 0;
     Stochastic_MaxSpread = 2;
   }
 };
