@@ -9,8 +9,11 @@ struct Stg_Stochastic_EURUSD_M15_Params : Stg_Stochastic_Params {
   Stg_Stochastic_EURUSD_M15_Params() {
     symbol = "EURUSD";
     tf = PERIOD_M15;
-    Stochastic_Period = 2;
-    Stochastic_Applied_Price = 3;
+    Stochastic_KPeriod = 5;
+    Stochastic_DPeriod = 5;
+    Stochastic_Slowing = 5;
+    Stochastic_MA_Method = 0;
+    Stochastic_Price_Field = 0;
     Stochastic_Shift = 0;
     Stochastic_SignalOpenMethod = -63;
     Stochastic_SignalOpenLevel = 36;
