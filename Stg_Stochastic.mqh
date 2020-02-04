@@ -23,6 +23,8 @@ INPUT ENUM_STO_PRICE Stochastic_Price_Field = 0;                // Price (0 - Lo
 INPUT int Stochastic_Shift = 0;                                 // Shift (relative to the current bar)
 INPUT int Stochastic_SignalOpenMethod = 0;                      // Signal open method (0-
 INPUT double Stochastic_SignalOpenLevel = 0.00000000;           // Signal open level
+INPUT int Stochastic_SignalOpenFilterMethod = 0.00000000;       // Signal open filter method
+INPUT int Stochastic_SignalOpenBoostMethod = 0.00000000;        // Signal open boost method
 INPUT int Stochastic_SignalCloseMethod = 0;                     // Signal close method (0-
 INPUT double Stochastic_SignalCloseLevel = 0.00000000;          // Signal close level
 INPUT int Stochastic_PriceLimitMethod = 0;                      // Price limit method
@@ -39,6 +41,8 @@ struct Stg_Stochastic_Params : Stg_Params {
   int Stochastic_Shift;
   int Stochastic_SignalOpenMethod;
   double Stochastic_SignalOpenLevel;
+  int Stochastic_SignalOpenFilterMethod;
+  int Stochastic_SignalOpenBoostMethod;
   int Stochastic_SignalCloseMethod;
   double Stochastic_SignalCloseLevel;
   int Stochastic_PriceLimitMethod;
@@ -46,18 +50,22 @@ struct Stg_Stochastic_Params : Stg_Params {
   double Stochastic_MaxSpread;
 
   // Constructor: Set default param values.
-  Stg_Stochastic_Params() :
-    Stochastic_KPeriod(::Stochastic_KPeriod),
-    Stochastic_DPeriod(::Stochastic_DPeriod),
-    Stochastic_Slowing(::Stochastic_Slowing),
-    Stochastic_MA_Method(::Stochastic_MA_Method),
-    Stochastic_Price_Field(::Stochastic_Price_Field),
-    Stochastic_Shift(::Stochastic_Shift), Stochastic_SignalOpenMethod(::Stochastic_SignalOpenMethod),
-      Stochastic_SignalOpenLevel(::Stochastic_SignalOpenLevel),
-      Stochastic_SignalCloseMethod(::Stochastic_SignalCloseMethod),
-      Stochastic_SignalCloseLevel(::Stochastic_SignalCloseLevel),
-      Stochastic_PriceLimitMethod(::Stochastic_PriceLimitMethod),
-      Stochastic_PriceLimitLevel(::Stochastic_PriceLimitLevel), Stochastic_MaxSpread(::Stochastic_MaxSpread) {}
+  Stg_Stochastic_Params()
+      : Stochastic_KPeriod(::Stochastic_KPeriod),
+        Stochastic_DPeriod(::Stochastic_DPeriod),
+        Stochastic_Slowing(::Stochastic_Slowing),
+        Stochastic_MA_Method(::Stochastic_MA_Method),
+        Stochastic_Price_Field(::Stochastic_Price_Field),
+        Stochastic_Shift(::Stochastic_Shift),
+        Stochastic_SignalOpenMethod(::Stochastic_SignalOpenMethod),
+        Stochastic_SignalOpenLevel(::Stochastic_SignalOpenLevel),
+        Stochastic_SignalOpenFilterMethod(::Stochastic_SignalOpenFilterMethod),
+        Stochastic_SignalOpenBoostMethod(::Stochastic_SignalOpenBoostMethod),
+        Stochastic_SignalCloseMethod(::Stochastic_SignalCloseMethod),
+        Stochastic_SignalCloseLevel(::Stochastic_SignalCloseLevel),
+        Stochastic_PriceLimitMethod(::Stochastic_PriceLimitMethod),
+        Stochastic_PriceLimitLevel(::Stochastic_PriceLimitLevel),
+        Stochastic_MaxSpread(::Stochastic_MaxSpread) {}
 };
 
 // Loads pair specific param values.
@@ -103,12 +111,14 @@ class Stg_Stochastic : public Strategy {
     }
     // Initialize strategy parameters.
     ChartParams cparams(_tf);
-    Stoch_Params stoch_params(_params.Stochastic_KPeriod, _params.Stochastic_DPeriod, _params.Stochastic_Slowing, _params.Stochastic_MA_Method, _params.Stochastic_Price_Field);
+    Stoch_Params stoch_params(_params.Stochastic_KPeriod, _params.Stochastic_DPeriod, _params.Stochastic_Slowing,
+                              _params.Stochastic_MA_Method, _params.Stochastic_Price_Field);
     IndicatorParams stoch_iparams(10, INDI_STOCHASTIC);
     StgParams sparams(new Trade(_tf, _Symbol), new Indi_Stochastic(stoch_params, stoch_iparams, cparams), NULL, NULL);
     sparams.logger.SetLevel(_log_level);
     sparams.SetMagicNo(_magic_no);
     sparams.SetSignals(_params.Stochastic_SignalOpenMethod, _params.Stochastic_SignalOpenMethod,
+                       _params.Stochastic_SignalOpenFilterMethod, _params.Stochastic_SignalOpenBoostMethod,
                        _params.Stochastic_SignalCloseMethod, _params.Stochastic_SignalCloseMethod);
     sparams.SetMaxSpread(_params.Stochastic_MaxSpread);
     // Initialize strategy instance.
@@ -183,6 +193,38 @@ class Stg_Stochastic : public Strategy {
   }
 
   /**
+   * Check strategy's opening signal additional filter.
+   */
+  bool SignalOpenFilter(ENUM_ORDER_TYPE _cmd, int _method = 0) {
+    bool _result = true;
+    if (_method != 0) {
+      // if (METHOD(_method, 0)) _result &= Trade().IsTrend(_cmd);
+      // if (METHOD(_method, 1)) _result &= Trade().IsPivot(_cmd);
+      // if (METHOD(_method, 2)) _result &= Trade().IsPeakHours(_cmd);
+      // if (METHOD(_method, 3)) _result &= Trade().IsRoundNumber(_cmd);
+      // if (METHOD(_method, 4)) _result &= Trade().IsHedging(_cmd);
+      // if (METHOD(_method, 5)) _result &= Trade().IsPeakBar(_cmd);
+    }
+    return _result;
+  }
+
+  /**
+   * Gets strategy's lot size boost (when enabled).
+   */
+  double SignalOpenBoost(ENUM_ORDER_TYPE _cmd, int _method = 0) {
+    bool _result = 1.0;
+    if (_method != 0) {
+      // if (METHOD(_method, 0)) if (Trade().IsTrend(_cmd)) _result *= 1.1;
+      // if (METHOD(_method, 1)) if (Trade().IsPivot(_cmd)) _result *= 1.1;
+      // if (METHOD(_method, 2)) if (Trade().IsPeakHours(_cmd)) _result *= 1.1;
+      // if (METHOD(_method, 3)) if (Trade().IsRoundNumber(_cmd)) _result *= 1.1;
+      // if (METHOD(_method, 4)) if (Trade().IsHedging(_cmd)) _result *= 1.1;
+      // if (METHOD(_method, 5)) if (Trade().IsPeakBar(_cmd)) _result *= 1.1;
+    }
+    return _result;
+  }
+
+  /**
    * Check strategy's closing signal.
    */
   bool SignalClose(ENUM_ORDER_TYPE _cmd, int _method = 0, double _level = 0.0) {
@@ -192,9 +234,9 @@ class Stg_Stochastic : public Strategy {
   /**
    * Gets price limit value for profit take or stop loss.
    */
-  double PriceLimit(ENUM_ORDER_TYPE _cmd, ENUM_STG_PRICE_LIMIT_MODE _mode, int _method = 0, double _level = 0.0) {
+  double PriceLimit(ENUM_ORDER_TYPE _cmd, ENUM_ORDER_TYPE_VALUE _mode, int _method = 0, double _level = 0.0) {
     double _trail = _level * Market().GetPipSize();
-    int _direction = Order::OrderDirection(_cmd) * (_mode == LIMIT_VALUE_STOP ? -1 : 1);
+    int _direction = Order::OrderDirection(_cmd) * (_mode == ORDER_TYPE_SL ? -1 : 1);
     double _default_value = Market().GetCloseOffer(_cmd) + _trail * _method * _direction;
     double _result = _default_value;
     switch (_method) {
