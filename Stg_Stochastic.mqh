@@ -21,12 +21,12 @@ INPUT int Stochastic_Slowing = 5;                               // Slowing
 INPUT ENUM_MA_METHOD Stochastic_MA_Method = MODE_SMA;           // Moving Average method
 INPUT ENUM_STO_PRICE Stochastic_Price_Field = 0;                // Price (0 - Low/High or 1 - Close/Close)
 INPUT int Stochastic_Shift = 0;                                 // Shift (relative to the current bar)
-INPUT int Stochastic_SignalOpenMethod = 0;                      // Signal open method (0-
-INPUT double Stochastic_SignalOpenLevel = 0.00000000;           // Signal open level
-INPUT int Stochastic_SignalOpenFilterMethod = 0.00000000;       // Signal open filter method
-INPUT int Stochastic_SignalOpenBoostMethod = 0.00000000;        // Signal open boost method
-INPUT int Stochastic_SignalCloseMethod = 0;                     // Signal close method (0-
-INPUT double Stochastic_SignalCloseLevel = 0.00000000;          // Signal close level
+INPUT int Stochastic_SignalOpenMethod = 0;                      // Signal open method
+INPUT int Stochastic_SignalOpenLevel = 30;                      // Signal open level
+INPUT int Stochastic_SignalOpenFilterMethod = 0;                // Signal open filter method
+INPUT int Stochastic_SignalOpenBoostMethod = 0;                 // Signal open boost method
+INPUT int Stochastic_SignalCloseMethod = 0;                     // Signal close method
+INPUT int Stochastic_SignalCloseLevel = 30;                     // Signal close level
 INPUT int Stochastic_PriceLimitMethod = 0;                      // Price limit method
 INPUT double Stochastic_PriceLimitLevel = 0;                    // Price limit level
 INPUT double Stochastic_MaxSpread = 6.0;                        // Max spread to trade (pips)
@@ -40,11 +40,11 @@ struct Stg_Stochastic_Params : StgParams {
   ENUM_STO_PRICE Stochastic_Price_Field;
   int Stochastic_Shift;
   int Stochastic_SignalOpenMethod;
-  double Stochastic_SignalOpenLevel;
+  int Stochastic_SignalOpenLevel;
   int Stochastic_SignalOpenFilterMethod;
   int Stochastic_SignalOpenBoostMethod;
   int Stochastic_SignalCloseMethod;
-  double Stochastic_SignalCloseLevel;
+  int Stochastic_SignalCloseLevel;
   int Stochastic_PriceLimitMethod;
   double Stochastic_PriceLimitLevel;
   double Stochastic_MaxSpread;
@@ -89,14 +89,14 @@ class Stg_Stochastic : public Strategy {
     }
     // Initialize strategy parameters.
     StochParams stoch_params(_params.Stochastic_KPeriod, _params.Stochastic_DPeriod, _params.Stochastic_Slowing,
-                              _params.Stochastic_MA_Method, _params.Stochastic_Price_Field);
+                             _params.Stochastic_MA_Method, _params.Stochastic_Price_Field);
     stoch_params.SetTf(_tf);
     StgParams sparams(new Trade(_tf, _Symbol), new Indi_Stochastic(stoch_params), NULL, NULL);
     sparams.logger.SetLevel(_log_level);
     sparams.SetMagicNo(_magic_no);
-    sparams.SetSignals(_params.Stochastic_SignalOpenMethod, _params.Stochastic_SignalOpenMethod,
+    sparams.SetSignals(_params.Stochastic_SignalOpenMethod, _params.Stochastic_SignalOpenLevel,
                        _params.Stochastic_SignalOpenFilterMethod, _params.Stochastic_SignalOpenBoostMethod,
-                       _params.Stochastic_SignalCloseMethod, _params.Stochastic_SignalCloseMethod);
+                       _params.Stochastic_SignalCloseMethod, _params.Stochastic_SignalCloseLevel);
     sparams.SetMaxSpread(_params.Stochastic_MaxSpread);
     // Initialize strategy instance.
     Strategy *_strat = new Stg_Stochastic(sparams, "Stochastic");
@@ -104,67 +104,29 @@ class Stg_Stochastic : public Strategy {
   }
 
   /**
-   * Check if Stochastic indicator is on buy or sell.
-   *
-   * @param
-   *   _cmd (int) - type of trade order command
-   *   period (int) - period to check for
-   *   _method (int) - signal method to use by using bitwise AND operation
-   *   _level (double) - signal level to consider the signal
+   * Check strategy's opening signal.
    */
   bool SignalOpen(ENUM_ORDER_TYPE _cmd, int _method = 0, double _level = 0.0) {
-    bool _result = false;
-    double stoch_0 = ((Indi_Stochastic *)this.Data()).GetValue(0);
-    double stoch_1 = ((Indi_Stochastic *)this.Data()).GetValue(1);
-    double stoch_2 = ((Indi_Stochastic *)this.Data()).GetValue(2);
-    switch (_cmd) {
-        /* TODO:
-              // if(iStochastic(NULL,0,5,3,3,MODE_SMA,0,LINE_MAIN,0)>iStochastic(NULL,0,5,3,3,MODE_SMA,0,LINE_SIGNAL,0))
-           return(0);
-              // if(stoch4h<stoch4h2){ //Sell signal
-              // if(stoch4h>stoch4h2){//Buy signal
-
-              //28. Stochastic Oscillator (1)
-              //Buy: main lline rises above 20 after it fell below this point
-              //Sell: main line falls lower than 80 after it rose above this point
-              if(iStochastic(NULL,pisto,pistok,pistod,istslow,MODE_EMA,0,LINE_MAIN,1)<20
-              &&iStochastic(NULL,pisto,pistok,pistod,istslow,MODE_EMA,0,LINE_MAIN,0)>=20)
-              {f28=1;}
-              if(iStochastic(NULL,pisto,pistok,pistod,istslow,MODE_EMA,0,LINE_MAIN,1)>80
-              &&iStochastic(NULL,pisto,pistok,pistod,istslow,MODE_EMA,0,LINE_MAIN,0)<=80)
-              {f28=-1;}
-
-              //29. Stochastic Oscillator (2)
-              //Buy: main line goes above the signal line
-              //Sell: signal line goes above the main line
-              if(iStochastic(NULL,pisto,pistok,pistod,istslow,MODE_EMA,0,LINE_MAIN,1)<iStochastic(NULL,pisto,pistok,pistod,istslow,MODE_EMA,0,LINE_SIGNAL,1)
-              &&
-           iStochastic(NULL,pisto,pistok,pistod,istslow,MODE_EMA,0,LINE_MAIN,0)>=iStochastic(NULL,pisto,pistok,pistod,istslow,MODE_EMA,0,LINE_SIGNAL,0))
-              {f29=1;}
-              if(iStochastic(NULL,pisto,pistok,pistod,istslow,MODE_EMA,0,LINE_MAIN,1)>iStochastic(NULL,pisto,pistok,pistod,istslow,MODE_EMA,0,LINE_SIGNAL,1)
-              &&
-           iStochastic(NULL,pisto,pistok,pistod,istslow,MODE_EMA,0,LINE_MAIN,0)<=iStochastic(NULL,pisto,pistok,pistod,istslow,MODE_EMA,0,LINE_SIGNAL,0))
-              {f29=-1;}
-        */
-      case ORDER_TYPE_BUY:
-        /*
-          bool _result = Stochastic_0[LINE_LOWER] != 0.0 || Stochastic_1[LINE_LOWER] != 0.0 || Stochastic_2[LINE_LOWER]
-          != 0.0; if (METHOD(_method, 0)) _result &= Open[CURR] > Close[CURR]; if (METHOD(_method, 1))
-          _result &= !Stochastic_On_Sell(tf); if (METHOD(_method, 2)) _result &= Stochastic_On_Buy(fmin(period +
-          1, M30)); if (METHOD(_method, 3)) _result &= Stochastic_On_Buy(M30); if (METHOD(_method, 4))
-          _result &= Stochastic_2[LINE_LOWER] != 0.0; if (METHOD(_method, 5)) _result &=
-          !Stochastic_On_Sell(M30);
-          */
-        break;
-      case ORDER_TYPE_SELL:
-        /*
-          bool _result = Stochastic_0[LINE_UPPER] != 0.0 || Stochastic_1[LINE_UPPER] != 0.0 || Stochastic_2[LINE_UPPER]
-          != 0.0; if (METHOD(_method, 0)) _result &= Open[CURR] < Close[CURR]; if (METHOD(_method, 1))
-          _result &= !Stochastic_On_Buy(tf); if (METHOD(_method, 2)) _result &= Stochastic_On_Sell(fmin(period +
-          1, M30)); if (METHOD(_method, 3)) _result &= Stochastic_On_Sell(M30); if (METHOD(_method, 4))
-          _result &= Stochastic_2[LINE_UPPER] != 0.0; if (METHOD(_method, 5)) _result &= !Stochastic_On_Buy(M30);
-          */
-        break;
+    Indicator *_indi = Data();
+    bool _is_valid = _indi[CURR].IsValid() && _indi[PREV].IsValid() && _indi[PPREV].IsValid();
+    bool _result = _is_valid;
+    if (_is_valid) {
+      switch (_cmd) {
+        case ORDER_TYPE_BUY:
+          // Buy: main line falls below level and goes above the signal line.
+          _result = _indi[CURR].value[LINE_MAIN] < 50 - _level &&
+                    _indi[CURR].value[LINE_MAIN] > _indi[CURR].value[LINE_SIGNAL];
+          if (METHOD(_method, 0)) _result &= _indi[PPREV].value[LINE_MAIN] < _indi[PPREV].value[LINE_SIGNAL];
+          if (METHOD(_method, 1)) _result &= _indi[CURR].value[0] < _level;
+          break;
+        case ORDER_TYPE_SELL:
+          // Sell: main line rises above level and main line above the signal line.
+          _result = _indi[CURR].value[LINE_MAIN] > 50 + _level &&
+                    _indi[CURR].value[LINE_MAIN] < _indi[CURR].value[LINE_SIGNAL];
+          if (METHOD(_method, 0)) _result &= _indi[PPREV].value[LINE_MAIN] > _indi[PPREV].value[LINE_SIGNAL];
+          if (METHOD(_method, 1)) _result &= _indi[CURR].value[0] > _level;
+          break;
+      }
     }
     return _result;
   }
@@ -212,14 +174,15 @@ class Stg_Stochastic : public Strategy {
    * Gets price limit value for profit take or stop loss.
    */
   double PriceLimit(ENUM_ORDER_TYPE _cmd, ENUM_ORDER_TYPE_VALUE _mode, int _method = 0, double _level = 0.0) {
+    Indicator *_indi = Data();
     double _trail = _level * Market().GetPipSize();
-    int _direction = Order::OrderDirection(_cmd) * (_mode == ORDER_TYPE_SL ? -1 : 1);
+    int _direction = Order::OrderDirection(_cmd, _mode);
     double _default_value = Market().GetCloseOffer(_cmd) + _trail * _method * _direction;
     double _result = _default_value;
     switch (_method) {
-      case 0: {
+      case 0:
         // @todo
-      }
+        break;
     }
     return _result;
   }
