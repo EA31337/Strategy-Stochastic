@@ -97,6 +97,7 @@ class Stg_Stochastic : public Strategy {
     sparams.SetSignals(_params.Stochastic_SignalOpenMethod, _params.Stochastic_SignalOpenLevel,
                        _params.Stochastic_SignalOpenFilterMethod, _params.Stochastic_SignalOpenBoostMethod,
                        _params.Stochastic_SignalCloseMethod, _params.Stochastic_SignalCloseLevel);
+    sparams.SetPriceLimits(_params.Stochastic_PriceLimitMethod, _params.Stochastic_PriceLimitLevel);
     sparams.SetMaxSpread(_params.Stochastic_MaxSpread);
     // Initialize strategy instance.
     Strategy *_strat = new Stg_Stochastic(sparams, "Stochastic");
