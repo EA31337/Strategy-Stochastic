@@ -92,7 +92,7 @@ class Stg_Stochastic : public Strategy {
                              _params.Stochastic_MA_Method, _params.Stochastic_Price_Field);
     stoch_params.SetTf(_tf);
     StgParams sparams(new Trade(_tf, _Symbol), new Indi_Stochastic(stoch_params), NULL, NULL);
-    sparams.logger.SetLevel(_log_level);
+    sparams.logger.Ptr().SetLevel(_log_level);
     sparams.SetMagicNo(_magic_no);
     sparams.SetSignals(_params.Stochastic_SignalOpenMethod, _params.Stochastic_SignalOpenLevel,
                        _params.Stochastic_SignalOpenFilterMethod, _params.Stochastic_SignalOpenBoostMethod,
