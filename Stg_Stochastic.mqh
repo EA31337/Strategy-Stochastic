@@ -17,8 +17,8 @@ INPUT int Stochastic_SignalOpenBoostMethod = 0;        // Signal open boost meth
 INPUT int Stochastic_SignalCloseMethod = 0;            // Signal close method
 INPUT int Stochastic_SignalCloseLevel = 30;            // Signal close level
 INPUT int Stochastic_PriceLimitMethod = 0;             // Price limit method
-INPUT float Stochastic_PriceLimitLevel = 0;           // Price limit level
-INPUT float Stochastic_MaxSpread = 6.0;               // Max spread to trade (pips)
+INPUT float Stochastic_PriceLimitLevel = 0;            // Price limit level
+INPUT float Stochastic_MaxSpread = 6.0;                // Max spread to trade (pips)
 
 // Includes.
 #include <EA31337-classes/Indicators/Indi_Stochastic.mqh>
@@ -39,8 +39,8 @@ struct Stg_Stochastic_Params : StgParams {
   int Stochastic_SignalCloseMethod;
   int Stochastic_SignalCloseLevel;
   int Stochastic_PriceLimitMethod;
-  double Stochastic_PriceLimitLevel;
-  double Stochastic_MaxSpread;
+  float Stochastic_PriceLimitLevel;
+  float Stochastic_MaxSpread;
 
   // Constructor: Set default param values.
   Stg_Stochastic_Params()
@@ -158,6 +158,6 @@ class Stg_Stochastic : public Strategy {
       }
       _result += _trail * _direction;
     }
-    return _result;
+    return (float)_result;
   }
 };
