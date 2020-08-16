@@ -4,14 +4,14 @@
  */
 
 // Defines indicator's parameter values for the given pair symbol and timeframe.
-struct Indi_Stochastic_Params_H4 : Indi_Stochastic_Params {
-  Indi_Stochastic_Params_H4() : Indi_Stochastic_Params(indi_stoch_defaults, PERIOD_H4) { shift = 0; }
-} indi_stoch_h4;
+struct Indi_Stochastic_Params_H8 : Indi_Stochastic_Params {
+  Indi_Stochastic_Params_H8() : Indi_Stochastic_Params(indi_stoch_defaults, PERIOD_H8) { shift = 0; }
+} indi_stoch_h8;
 
 // Defines strategy's parameter values for the given pair symbol and timeframe.
-struct Stg_Stochastic_Params_H4 : StgParams {
+struct Stg_Stochastic_Params_H8 : StgParams {
   // Struct constructor.
-  Stg_Stochastic_Params_H4() : StgParams(stg_stoch_defaults) {
+  Stg_Stochastic_Params_H8() : StgParams(stg_stoch_defaults) {
     lot_size = 0;
     signal_open_method = 0;
     signal_open_filter = 1;
@@ -24,4 +24,4 @@ struct Stg_Stochastic_Params_H4 : StgParams {
     tick_filter_method = 1;
     max_spread = 0;
   }
-} stg_stoch_h4;
+} stg_stoch_h8;

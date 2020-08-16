@@ -3,67 +3,72 @@
  * Implements Stochastic strategy based on the Stochastic Oscillator.
  */
 
-// User input params.
-INPUT int Stochastic_KPeriod = 5;                      // K line period
-INPUT int Stochastic_DPeriod = 5;                      // D line period
-INPUT int Stochastic_Slowing = 5;                      // Slowing
-INPUT ENUM_MA_METHOD Stochastic_MA_Method = MODE_SMA;  // Moving Average method
-INPUT ENUM_STO_PRICE Stochastic_Price_Field = 0;       // Price (0 - Low/High or 1 - Close/Close)
-INPUT int Stochastic_Shift = 0;                        // Shift (relative to the current bar)
-INPUT int Stochastic_SignalOpenMethod = 0;             // Signal open method
-INPUT int Stochastic_SignalOpenLevel = 30;             // Signal open level
-INPUT int Stochastic_SignalOpenFilterMethod = 0;       // Signal open filter method
-INPUT int Stochastic_SignalOpenBoostMethod = 0;        // Signal open boost method
-INPUT int Stochastic_SignalCloseMethod = 0;            // Signal close method
-INPUT int Stochastic_SignalCloseLevel = 30;            // Signal close level
-INPUT int Stochastic_PriceLimitMethod = 0;             // Price limit method
-INPUT float Stochastic_PriceLimitLevel = 0;            // Price limit level
-INPUT float Stochastic_MaxSpread = 6.0;                // Max spread to trade (pips)
-
 // Includes.
 #include <EA31337-classes/Indicators/Indi_Stochastic.mqh>
 #include <EA31337-classes/Strategy.mqh>
 
+// User input params.
+INPUT float Stochastic_LotSize = 0;               // Lot size
+INPUT int Stochastic_SignalOpenMethod = 0;        // Signal open method
+INPUT int Stochastic_SignalOpenLevel = 30;        // Signal open level
+INPUT int Stochastic_SignalOpenFilterMethod = 0;  // Signal open filter method
+INPUT int Stochastic_SignalOpenBoostMethod = 0;   // Signal open boost method
+INPUT int Stochastic_SignalCloseMethod = 0;       // Signal close method
+INPUT int Stochastic_SignalCloseLevel = 30;       // Signal close level
+INPUT int Stochastic_PriceLimitMethod = 0;        // Price limit method
+INPUT float Stochastic_PriceLimitLevel = 0;       // Price limit level
+INPUT int Stochastic_TickFilterMethod = 0;        // Tick filter method
+INPUT float Stochastic_MaxSpread = 6.0;           // Max spread to trade (pips)
+INPUT int Stochastic_Shift = 0;                   // Shift (relative to the current bar)
+INPUT string __Stochastic_Indi_Stochastic_Parameters__ =
+    "-- Stochastic strategy: Stochastic indicator params --";  // >>> Stochastic strategy: Stochastic indicator <<<
+INPUT int Indi_Stochastic_KPeriod = 5;                         // K line period
+INPUT int Indi_Stochastic_DPeriod = 5;                         // D line period
+INPUT int Indi_Stochastic_Slowing = 5;                         // Slowing
+INPUT ENUM_MA_METHOD Indi_Stochastic_MA_Method = MODE_SMA;     // Moving Average method
+INPUT ENUM_STO_PRICE Indi_Stochastic_Price_Field = 0;          // Price (0 - Low/High or 1 - Close/Close)
+
+// Structs.
+
+// Defines struct with default user indicator values.
+struct Indi_Stochastic_Params_Defaults : StochParams {
+  Indi_Stochastic_Params_Defaults()
+      : StochParams(::Indi_Stochastic_KPeriod, ::Indi_Stochastic_DPeriod, ::Indi_Stochastic_Slowing,
+                    ::Indi_Stochastic_MA_Method, ::Indi_Stochastic_Price_Field) {}
+} indi_stoch_defaults;
+
+// Defines struct to store indicator parameter values.
+struct Indi_Stochastic_Params : public StochParams {
+  // Struct constructors.
+  void Indi_Stochastic_Params(StochParams &_params, ENUM_TIMEFRAMES _tf) : StochParams(_params, _tf) {}
+};
+
+// Defines struct with default user strategy values.
+struct Stg_Stochastic_Params_Defaults : StgParams {
+  Stg_Stochastic_Params_Defaults()
+      : StgParams(::Stochastic_SignalOpenMethod, ::Stochastic_SignalOpenFilterMethod, ::Stochastic_SignalOpenLevel,
+                  ::Stochastic_SignalOpenBoostMethod, ::Stochastic_SignalCloseMethod, ::Stochastic_SignalCloseLevel,
+                  ::Stochastic_PriceLimitMethod, ::Stochastic_PriceLimitLevel, ::Stochastic_TickFilterMethod,
+                  ::Stochastic_MaxSpread, ::Stochastic_Shift) {}
+} stg_stoch_defaults;
+
 // Struct to define strategy parameters to override.
 struct Stg_Stochastic_Params : StgParams {
-  int Stochastic_KPeriod;
-  int Stochastic_DPeriod;
-  int Stochastic_Slowing;
-  ENUM_MA_METHOD Stochastic_MA_Method;
-  ENUM_STO_PRICE Stochastic_Price_Field;
-  int Stochastic_Shift;
-  int Stochastic_SignalOpenMethod;
-  int Stochastic_SignalOpenLevel;
-  int Stochastic_SignalOpenFilterMethod;
-  int Stochastic_SignalOpenBoostMethod;
-  int Stochastic_SignalCloseMethod;
-  int Stochastic_SignalCloseLevel;
-  int Stochastic_PriceLimitMethod;
-  float Stochastic_PriceLimitLevel;
-  float Stochastic_MaxSpread;
+  Indi_Stochastic_Params iparams;
+  StgParams sparams;
 
-  // Constructor: Set default param values.
-  Stg_Stochastic_Params()
-      : Stochastic_KPeriod(::Stochastic_KPeriod),
-        Stochastic_DPeriod(::Stochastic_DPeriod),
-        Stochastic_Slowing(::Stochastic_Slowing),
-        Stochastic_MA_Method(::Stochastic_MA_Method),
-        Stochastic_Price_Field(::Stochastic_Price_Field),
-        Stochastic_Shift(::Stochastic_Shift),
-        Stochastic_SignalOpenMethod(::Stochastic_SignalOpenMethod),
-        Stochastic_SignalOpenLevel(::Stochastic_SignalOpenLevel),
-        Stochastic_SignalOpenFilterMethod(::Stochastic_SignalOpenFilterMethod),
-        Stochastic_SignalOpenBoostMethod(::Stochastic_SignalOpenBoostMethod),
-        Stochastic_SignalCloseMethod(::Stochastic_SignalCloseMethod),
-        Stochastic_SignalCloseLevel(::Stochastic_SignalCloseLevel),
-        Stochastic_PriceLimitMethod(::Stochastic_PriceLimitMethod),
-        Stochastic_PriceLimitLevel(::Stochastic_PriceLimitLevel),
-        Stochastic_MaxSpread(::Stochastic_MaxSpread) {}
+  // Struct constructors.
+  Stg_Stochastic_Params(Indi_Stochastic_Params &_iparams, StgParams &_sparams)
+      : iparams(indi_stoch_defaults, _iparams.tf), sparams(stg_stoch_defaults) {
+    iparams = _iparams;
+    sparams = _sparams;
+  }
 };
 
 // Loads pair specific param values.
 #include "sets/EURUSD_H1.h"
 #include "sets/EURUSD_H4.h"
+#include "sets/EURUSD_H8.h"
 #include "sets/EURUSD_M1.h"
 #include "sets/EURUSD_M15.h"
 #include "sets/EURUSD_M30.h"
@@ -75,25 +80,24 @@ class Stg_Stochastic : public Strategy {
 
   static Stg_Stochastic *Init(ENUM_TIMEFRAMES _tf = NULL, long _magic_no = NULL, ENUM_LOG_LEVEL _log_level = V_INFO) {
     // Initialize strategy initial values.
-    Stg_Stochastic_Params _params;
+    Indi_Stochastic_Params _indi_params(indi_stoch_defaults, _tf);
+    StgParams _stg_params(stg_stoch_defaults);
     if (!Terminal::IsOptimization()) {
-      SetParamsByTf<Stg_Stochastic_Params>(_params, _tf, stg_stoch_m1, stg_stoch_m5, stg_stoch_m15, stg_stoch_m30,
-                                           stg_stoch_h1, stg_stoch_h4, stg_stoch_h4);
+      SetParamsByTf<Indi_Stochastic_Params>(_indi_params, _tf, indi_stoch_m1, indi_stoch_m5, indi_stoch_m15,
+                                            indi_stoch_m30, indi_stoch_h1, indi_stoch_h4, indi_stoch_h8);
+      SetParamsByTf<StgParams>(_stg_params, _tf, stg_stoch_m1, stg_stoch_m5, stg_stoch_m15, stg_stoch_m30, stg_stoch_h1,
+                               stg_stoch_h4, stg_stoch_h8);
     }
+    // Initialize indicator.
+    StochParams stoch_params(_indi_params);
+    _stg_params.SetIndicator(new Indi_Stochastic(_indi_params));
     // Initialize strategy parameters.
-    StochParams stoch_params(_params.Stochastic_KPeriod, _params.Stochastic_DPeriod, _params.Stochastic_Slowing,
-                             _params.Stochastic_MA_Method, _params.Stochastic_Price_Field);
-    stoch_params.SetTf(_tf);
-    StgParams sparams(new Trade(_tf, _Symbol), new Indi_Stochastic(stoch_params), NULL, NULL);
-    sparams.logger.Ptr().SetLevel(_log_level);
-    sparams.SetMagicNo(_magic_no);
-    sparams.SetSignals(_params.Stochastic_SignalOpenMethod, _params.Stochastic_SignalOpenLevel,
-                       _params.Stochastic_SignalOpenFilterMethod, _params.Stochastic_SignalOpenBoostMethod,
-                       _params.Stochastic_SignalCloseMethod, _params.Stochastic_SignalCloseLevel);
-    sparams.SetPriceLimits(_params.Stochastic_PriceLimitMethod, _params.Stochastic_PriceLimitLevel);
-    sparams.SetMaxSpread(_params.Stochastic_MaxSpread);
+    _stg_params.GetLog().SetLevel(_log_level);
+    _stg_params.SetMagicNo(_magic_no);
+    _stg_params.SetTf(_tf, _Symbol);
     // Initialize strategy instance.
-    Strategy *_strat = new Stg_Stochastic(sparams, "Stochastic");
+    Strategy *_strat = new Stg_Stochastic(_stg_params, "Stochastic");
+    _stg_params.SetStops(_strat, _strat);
     return _strat;
   }
 
@@ -138,21 +142,21 @@ class Stg_Stochastic : public Strategy {
     if (_is_valid) {
       switch (_method) {
         case 0: {
-          int _bar_count = (int)_level * (int)_indi.GetKPeriod();
-          _result = _direction > 0 ? _indi.GetPrice(PRICE_HIGH, _indi.GetHighest(_bar_count))
-                                   : _indi.GetPrice(PRICE_LOW, _indi.GetLowest(_bar_count));
+          int _bar_count0 = (int)_level * (int)_indi.GetKPeriod();
+          _result = _direction > 0 ? _indi.GetPrice(PRICE_HIGH, _indi.GetHighest(_bar_count0))
+                                   : _indi.GetPrice(PRICE_LOW, _indi.GetLowest(_bar_count0));
           break;
         }
         case 1: {
-          int _bar_count = (int)_level * (int)_indi.GetDPeriod();
-          _result = _direction > 0 ? _indi.GetPrice(PRICE_HIGH, _indi.GetHighest(_bar_count))
-                                   : _indi.GetPrice(PRICE_LOW, _indi.GetLowest(_bar_count));
+          int _bar_count1 = (int)_level * (int)_indi.GetDPeriod();
+          _result = _direction > 0 ? _indi.GetPrice(PRICE_HIGH, _indi.GetHighest(_bar_count1))
+                                   : _indi.GetPrice(PRICE_LOW, _indi.GetLowest(_bar_count1));
           break;
         }
         case 2: {
-          int _bar_count = (int)_level * (int)_indi.GetSlowing();
-          _result = _direction > 0 ? _indi.GetPrice(PRICE_HIGH, _indi.GetHighest(_bar_count))
-                                   : _indi.GetPrice(PRICE_LOW, _indi.GetLowest(_bar_count));
+          int _bar_count2 = (int)_level * (int)_indi.GetSlowing();
+          _result = _direction > 0 ? _indi.GetPrice(PRICE_HIGH, _indi.GetHighest(_bar_count2))
+                                   : _indi.GetPrice(PRICE_LOW, _indi.GetLowest(_bar_count2));
           break;
         }
       }
