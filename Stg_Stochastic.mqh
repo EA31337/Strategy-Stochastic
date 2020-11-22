@@ -15,8 +15,8 @@ INPUT int Stochastic_SignalOpenFilterMethod = 0;  // Signal open filter method
 INPUT int Stochastic_SignalOpenBoostMethod = 0;   // Signal open boost method
 INPUT int Stochastic_SignalCloseMethod = 0;       // Signal close method
 INPUT int Stochastic_SignalCloseLevel = 30;       // Signal close level
-INPUT int Stochastic_PriceLimitMethod = 0;        // Price limit method
-INPUT float Stochastic_PriceLimitLevel = 0;       // Price limit level
+INPUT int Stochastic_PriceStopMethod = 0;         // Price stop method
+INPUT float Stochastic_PriceStopLevel = 0;        // Price stop level
 INPUT int Stochastic_TickFilterMethod = 0;        // Tick filter method
 INPUT float Stochastic_MaxSpread = 6.0;           // Max spread to trade (pips)
 INPUT int Stochastic_Shift = 0;                   // Shift (relative to the current bar)
@@ -48,7 +48,7 @@ struct Stg_Stochastic_Params_Defaults : StgParams {
   Stg_Stochastic_Params_Defaults()
       : StgParams(::Stochastic_SignalOpenMethod, ::Stochastic_SignalOpenFilterMethod, ::Stochastic_SignalOpenLevel,
                   ::Stochastic_SignalOpenBoostMethod, ::Stochastic_SignalCloseMethod, ::Stochastic_SignalCloseLevel,
-                  ::Stochastic_PriceLimitMethod, ::Stochastic_PriceLimitLevel, ::Stochastic_TickFilterMethod,
+                  ::Stochastic_PriceStopMethod, ::Stochastic_PriceStopLevel, ::Stochastic_TickFilterMethod,
                   ::Stochastic_MaxSpread, ::Stochastic_Shift) {}
 } stg_stoch_defaults;
 
@@ -130,9 +130,9 @@ class Stg_Stochastic : public Strategy {
   }
 
   /**
-   * Gets price limit value for profit take or stop loss.
+   * Gets price stop value for profit take or stop loss.
    */
-  float PriceLimit(ENUM_ORDER_TYPE _cmd, ENUM_ORDER_TYPE_VALUE _mode, int _method = 0, float _level = 0.0) {
+  float PriceStop(ENUM_ORDER_TYPE _cmd, ENUM_ORDER_TYPE_VALUE _mode, int _method = 0, float _level = 0.0) {
     Indi_Stochastic *_indi = Data();
     bool _is_valid = _indi[CURR].IsValid() && _indi[PREV].IsValid() && _indi[PPREV].IsValid();
     double _trail = _level * Market().GetPipSize();
