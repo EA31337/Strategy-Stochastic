@@ -141,19 +141,19 @@ class Stg_Stochastic : public Strategy {
     double _result = _default_value;
     if (_is_valid) {
       switch (_method) {
-        case 0: {
+        case 1: {
           int _bar_count0 = (int)_level * (int)_indi.GetKPeriod();
           _result = _direction > 0 ? _indi.GetPrice(PRICE_HIGH, _indi.GetHighest(_bar_count0))
                                    : _indi.GetPrice(PRICE_LOW, _indi.GetLowest(_bar_count0));
           break;
         }
-        case 1: {
+        case 2: {
           int _bar_count1 = (int)_level * (int)_indi.GetDPeriod();
           _result = _direction > 0 ? _indi.GetPrice(PRICE_HIGH, _indi.GetHighest(_bar_count1))
                                    : _indi.GetPrice(PRICE_LOW, _indi.GetLowest(_bar_count1));
           break;
         }
-        case 2: {
+        case 3: {
           int _bar_count2 = (int)_level * (int)_indi.GetSlowing();
           _result = _direction > 0 ? _indi.GetPrice(PRICE_HIGH, _indi.GetHighest(_bar_count2))
                                    : _indi.GetPrice(PRICE_LOW, _indi.GetLowest(_bar_count2));
