@@ -112,17 +112,15 @@ class Stg_Stochastic : public Strategy {
       switch (_cmd) {
         case ORDER_TYPE_BUY:
           // Buy: main line falls below level and goes above the signal line.
-          _result = _indi[CURR].value[LINE_MAIN] < 50 - _level &&
-                    _indi[CURR].value[LINE_MAIN] > _indi[CURR].value[LINE_SIGNAL];
-          if (METHOD(_method, 0)) _result &= _indi[PPREV].value[LINE_MAIN] < _indi[PPREV].value[LINE_SIGNAL];
-          if (METHOD(_method, 1)) _result &= _indi[CURR].value[0] < _level;
+          _result = _indi[CURR][LINE_MAIN] < 50 - _level && _indi[CURR][LINE_MAIN] > _indi[CURR][LINE_SIGNAL];
+          if (METHOD(_method, 0)) _result &= _indi[PPREV][LINE_MAIN] < _indi[PPREV][LINE_SIGNAL];
+          if (METHOD(_method, 1)) _result &= _indi[CURR][0] < _level;
           break;
         case ORDER_TYPE_SELL:
           // Sell: main line rises above level and main line above the signal line.
-          _result = _indi[CURR].value[LINE_MAIN] > 50 + _level &&
-                    _indi[CURR].value[LINE_MAIN] < _indi[CURR].value[LINE_SIGNAL];
-          if (METHOD(_method, 0)) _result &= _indi[PPREV].value[LINE_MAIN] > _indi[PPREV].value[LINE_SIGNAL];
-          if (METHOD(_method, 1)) _result &= _indi[CURR].value[0] > _level;
+          _result = _indi[CURR][LINE_MAIN] > 50 + _level && _indi[CURR][LINE_MAIN] < _indi[CURR][LINE_SIGNAL];
+          if (METHOD(_method, 0)) _result &= _indi[PPREV][LINE_MAIN] > _indi[PPREV][LINE_SIGNAL];
+          if (METHOD(_method, 1)) _result &= _indi[CURR][0] > _level;
           break;
       }
     }
