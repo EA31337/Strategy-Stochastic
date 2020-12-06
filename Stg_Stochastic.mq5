@@ -5,6 +5,8 @@
 
 // Includes EA31337 framework.
 #include <EA31337-classes/EA.mqh>
+#include <EA31337-classes/Indicators/Indi_Stochastic.mqh>
+#include <EA31337-classes/Strategy.mqh>
 
 // Inputs.
 input string __Stochastic_Parameters__ = "-- Settings for --";  // >>> STOCHASTIC <<<

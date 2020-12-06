@@ -3,10 +3,6 @@
  * Implements Stochastic strategy based on the Stochastic Oscillator.
  */
 
-// Includes.
-#include <EA31337-classes/Indicators/Indi_Stochastic.mqh>
-#include <EA31337-classes/Strategy.mqh>
-
 // User input params.
 INPUT float Stochastic_LotSize = 0;               // Lot size
 INPUT int Stochastic_SignalOpenMethod = 0;        // Signal open method
