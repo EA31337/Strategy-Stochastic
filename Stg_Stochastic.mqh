@@ -16,6 +16,7 @@ INPUT float Stochastic_PriceStopLevel = 0;        // Price stop level
 INPUT int Stochastic_TickFilterMethod = 0;        // Tick filter method
 INPUT float Stochastic_MaxSpread = 6.0;           // Max spread to trade (pips)
 INPUT int Stochastic_Shift = 0;                   // Shift (relative to the current bar)
+INPUT int Stochastic_OrderCloseTime = -10;        // Order close time in mins (>0) or bars (<0)
 INPUT string __Stochastic_Indi_Stochastic_Parameters__ =
     "-- Stochastic strategy: Stochastic indicator params --";  // >>> Stochastic strategy: Stochastic indicator <<<
 INPUT int Indi_Stochastic_KPeriod = 5;                         // K line period
@@ -45,7 +46,7 @@ struct Stg_Stochastic_Params_Defaults : StgParams {
       : StgParams(::Stochastic_SignalOpenMethod, ::Stochastic_SignalOpenFilterMethod, ::Stochastic_SignalOpenLevel,
                   ::Stochastic_SignalOpenBoostMethod, ::Stochastic_SignalCloseMethod, ::Stochastic_SignalCloseLevel,
                   ::Stochastic_PriceStopMethod, ::Stochastic_PriceStopLevel, ::Stochastic_TickFilterMethod,
-                  ::Stochastic_MaxSpread, ::Stochastic_Shift) {}
+                  ::Stochastic_MaxSpread, ::Stochastic_Shift, ::Stochastic_OrderCloseTime) {}
 } stg_stoch_defaults;
 
 // Struct to define strategy parameters to override.
