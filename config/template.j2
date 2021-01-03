@@ -4,29 +4,29 @@
  */
 
 // Defines indicator's parameter values for the given pair symbol and timeframe.
-struct Indi_Force_Params_{{ Timeframe }} : Indi_Force_Params {
-  Indi_Force_Params_{{ Timeframe }}() : Indi_Force_Params(indi_force_defaults, PERIOD_{{ Timeframe }}) {
-    applied_price = (ENUM_APPLIED_PRICE){{ Force_Indi_Force_Applied_Price | default(0) }};
-    ma_method = {{ Force_Indi_Force_MA_Method | default(0) }};
-    period = {{ Force_Indi_Force_Period | default(0) }};
-    shift = {{ Force_Shift | default(0) }};
+struct Indi_Stochastic_Params_{{ Timeframe }} : Indi_Stochastic_Params {
+  Indi_Stochastic_Params_{{ Timeframe }}() : Indi_Stochastic_Params(indi_stoch_defaults, PERIOD_{{ Timeframe }}) {
+    applied_price = (ENUM_APPLIED_PRICE){{ Stochastic_Indi_Stochastic_Applied_Price | default(0) }};
+    ma_method = {{ Stochastic_Indi_Stochastic_MA_Method | default(0) }};
+    period = {{ Stochastic_Indi_Stochastic_Period | default(0) }};
+    shift = {{ Stochastic_Shift | default(0) }};
   }
-} indi_force_{{ Timeframe | lower }};
+} indi_stoch_{{ Timeframe | lower }};
 
 // Defines strategy's parameter values for the given pair symbol and timeframe.
-struct Stg_Force_Params_{{ Timeframe }} : StgParams {
+struct Stg_Stochastic_Params_{{ Timeframe }} : StgParams {
   // Struct constructor.
-  Stg_Force_Params_{{ Timeframe }}() : StgParams(stg_force_defaults) {
-    lot_size = {{ Force_LotSize | default(0) }};
-    signal_open_method = {{ Force_SignalOpenMethod | default(0) }};
-    signal_open_filter = {{ Force_SignalOpenFilterMethod | default(1) }};
-    signal_open_level = {{ Force_SignalOpenLevel | default(0) }};
-    signal_open_boost = {{ Force_SignalOpenBoostMethod | default(0) }};
-    signal_close_method = {{ Force_SignalCloseMethod | default(0) }};
-    signal_close_level = {{ Force_SignalCloseLevel | default(0) }};
-    price_stop_method = {{ Force_PriceStopMethod | default(0) }};
-    price_stop_level = {{ Force_SignalCloseLevel | default(1) }};
-    tick_filter_method = {{ Force_TickFilterMethod  | default(1) }};
-    max_spread = {{ Force_MaxSpread | default(0) }};
+  Stg_Stochastic_Params_{{ Timeframe }}() : StgParams(stg_stoch_defaults) {
+    lot_size = {{ Stochastic_LotSize | default(0) }};
+    signal_open_method = {{ Stochastic_SignalOpenMethod | default(0) }};
+    signal_open_filter = {{ Stochastic_SignalOpenFilterMethod | default(1) }};
+    signal_open_level = {{ Stochastic_SignalOpenLevel | default(0) }};
+    signal_open_boost = {{ Stochastic_SignalOpenBoostMethod | default(0) }};
+    signal_close_method = {{ Stochastic_SignalCloseMethod | default(0) }};
+    signal_close_level = {{ Stochastic_SignalCloseLevel | default(0) }};
+    price_stop_method = {{ Stochastic_PriceStopMethod | default(0) }};
+    price_stop_level = {{ Stochastic_SignalCloseLevel | default(1) }};
+    tick_filter_method = {{ Stochastic_TickFilterMethod  | default(1) }};
+    max_spread = {{ Stochastic_MaxSpread | default(0) }};
   }
-} stg_force_{{ Timeframe | lower }};
+} stg_stoch_{{ Timeframe | lower }};
