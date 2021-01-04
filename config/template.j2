@@ -20,10 +20,10 @@ struct Stg_Stochastic_Params_{{ Timeframe }} : StgParams {
     lot_size = {{ Stochastic_LotSize | default(0) }};
     signal_open_method = {{ Stochastic_SignalOpenMethod | default(0) }};
     signal_open_filter = {{ Stochastic_SignalOpenFilterMethod | default(1) }};
-    signal_open_level = {{ Stochastic_SignalOpenLevel | default(0) }};
+    signal_open_level = (float){{ Stochastic_SignalOpenLevel | default(0) }};
     signal_open_boost = {{ Stochastic_SignalOpenBoostMethod | default(0) }};
     signal_close_method = {{ Stochastic_SignalCloseMethod | default(0) }};
-    signal_close_level = {{ Stochastic_SignalCloseLevel | default(0) }};
+    signal_close_level = (float){{ Stochastic_SignalCloseLevel | default(0) }};
     price_stop_method = {{ Stochastic_PriceStopMethod | default(0) }};
     price_stop_level = {{ Stochastic_SignalCloseLevel | default(1) }};
     tick_filter_method = {{ Stochastic_TickFilterMethod  | default(1) }};
