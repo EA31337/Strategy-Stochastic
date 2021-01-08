@@ -25,7 +25,7 @@ struct Stg_Stochastic_Params_{{ Timeframe }} : StgParams {
     signal_close_method = {{ Stochastic_SignalCloseMethod | default(0) }};
     signal_close_level = (float){{ Stochastic_SignalCloseLevel | default(0) }};
     price_stop_method = {{ Stochastic_PriceStopMethod | default(0) }};
-    price_stop_level = {{ Stochastic_SignalCloseLevel | default(1) }};
+    price_stop_level = (float){{ Stochastic_SignalCloseLevel | default(1) }};
     tick_filter_method = {{ Stochastic_TickFilterMethod  | default(1) }};
     max_spread = {{ Stochastic_MaxSpread | default(0) }};
   }
