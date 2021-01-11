@@ -7,7 +7,7 @@
 struct Indi_Stochastic_Params_{{ Timeframe }} : StochParams {
   Indi_Stochastic_Params_{{ Timeframe }}() : StochParams(indi_stoch_defaults, PERIOD_{{ Timeframe }}) {
     applied_price = (ENUM_APPLIED_PRICE){{ Stochastic_Indi_Stochastic_Applied_Price | default(0) }};
-    ma_method = {{ Stochastic_Indi_Stochastic_MA_Method | default(0) }};
+    ma_method = (ENUM_MA_METHOD){{ Stochastic_Indi_Stochastic_MA_Method | default(0) }};
     period = {{ Stochastic_Indi_Stochastic_Period | default(0) }};
     shift = {{ Stochastic_Shift | default(0) }};
   }
