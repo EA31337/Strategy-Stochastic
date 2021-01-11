@@ -19,26 +19,22 @@ INPUT int Stochastic_Shift = 0;                   // Shift (relative to the curr
 INPUT int Stochastic_OrderCloseTime = -20;        // Order close time in mins (>0) or bars (<0)
 INPUT string __Stochastic_Indi_Stochastic_Parameters__ =
     "-- Stochastic strategy: Stochastic indicator params --";  // >>> Stochastic strategy: Stochastic indicator <<<
-INPUT int Indi_Stochastic_KPeriod = 5;                         // K line period
-INPUT int Indi_Stochastic_DPeriod = 5;                         // D line period
-INPUT int Indi_Stochastic_Slowing = 5;                         // Slowing
-INPUT ENUM_MA_METHOD Indi_Stochastic_MA_Method = MODE_SMA;     // Moving Average method
-INPUT ENUM_STO_PRICE Indi_Stochastic_Price_Field = 0;          // Price (0 - Low/High or 1 - Close/Close)
+INPUT int Stochastic_Indi_Stochastic_KPeriod = 5;              // K line period
+INPUT int Stochastic_Indi_Stochastic_DPeriod = 5;              // D line period
+INPUT int Stochastic_Indi_Stochastic_Slowing = 5;              // Slowing
+INPUT ENUM_MA_METHOD Stochastic_Indi_Stochastic_MA_Method = MODE_SMA;  // Moving Average method
+INPUT ENUM_STO_PRICE Stochastic_Indi_Stochastic_Price_Field = 0;       // Price (0 - Low/High or 1 - Close/Close)
+INPUT int Stochastic_Indi_Stochastic_Shift = 0;                        // Shift
 
 // Structs.
 
 // Defines struct with default user indicator values.
 struct Indi_Stochastic_Params_Defaults : StochParams {
   Indi_Stochastic_Params_Defaults()
-      : StochParams(::Indi_Stochastic_KPeriod, ::Indi_Stochastic_DPeriod, ::Indi_Stochastic_Slowing,
-                    ::Indi_Stochastic_MA_Method, ::Indi_Stochastic_Price_Field) {}
+      : StochParams(::Stochastic_Indi_Stochastic_KPeriod, ::Stochastic_Indi_Stochastic_DPeriod,
+                    ::Stochastic_Indi_Stochastic_Slowing, ::Stochastic_Indi_Stochastic_MA_Method,
+                    ::Stochastic_Indi_Stochastic_Price_Field, ::Stochastic_Indi_Stochastic_Shift) {}
 } indi_stoch_defaults;
-
-// Defines struct to store indicator parameter values.
-struct Indi_Stochastic_Params : public StochParams {
-  // Struct constructors.
-  void Indi_Stochastic_Params(StochParams &_params, ENUM_TIMEFRAMES _tf) : StochParams(_params, _tf) {}
-};
 
 // Defines struct with default user strategy values.
 struct Stg_Stochastic_Params_Defaults : StgParams {
@@ -51,11 +47,11 @@ struct Stg_Stochastic_Params_Defaults : StgParams {
 
 // Struct to define strategy parameters to override.
 struct Stg_Stochastic_Params : StgParams {
-  Indi_Stochastic_Params iparams;
+  StochParams iparams;
   StgParams sparams;
 
   // Struct constructors.
-  Stg_Stochastic_Params(Indi_Stochastic_Params &_iparams, StgParams &_sparams)
+  Stg_Stochastic_Params(StochParams &_iparams, StgParams &_sparams)
       : iparams(indi_stoch_defaults, _iparams.tf), sparams(stg_stoch_defaults) {
     iparams = _iparams;
     sparams = _sparams;
@@ -77,11 +73,11 @@ class Stg_Stochastic : public Strategy {
 
   static Stg_Stochastic *Init(ENUM_TIMEFRAMES _tf = NULL, long _magic_no = NULL, ENUM_LOG_LEVEL _log_level = V_INFO) {
     // Initialize strategy initial values.
-    Indi_Stochastic_Params _indi_params(indi_stoch_defaults, _tf);
+    StochParams _indi_params(indi_stoch_defaults, _tf);
     StgParams _stg_params(stg_stoch_defaults);
     if (!Terminal::IsOptimization()) {
-      SetParamsByTf<Indi_Stochastic_Params>(_indi_params, _tf, indi_stoch_m1, indi_stoch_m5, indi_stoch_m15,
-                                            indi_stoch_m30, indi_stoch_h1, indi_stoch_h4, indi_stoch_h8);
+      SetParamsByTf<StochParams>(_indi_params, _tf, indi_stoch_m1, indi_stoch_m5, indi_stoch_m15, indi_stoch_m30,
+                                 indi_stoch_h1, indi_stoch_h4, indi_stoch_h8);
       SetParamsByTf<StgParams>(_stg_params, _tf, stg_stoch_m1, stg_stoch_m5, stg_stoch_m15, stg_stoch_m30, stg_stoch_h1,
                                stg_stoch_h4, stg_stoch_h8);
     }

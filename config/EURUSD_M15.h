@@ -4,8 +4,8 @@
  */
 
 // Defines indicator's parameter values for the given pair symbol and timeframe.
-struct Indi_Stochastic_Params_M15 : Indi_Stochastic_Params {
-  Indi_Stochastic_Params_M15() : Indi_Stochastic_Params(indi_stoch_defaults, PERIOD_M15) { shift = 0; }
+struct Indi_Stochastic_Params_M15 : StochParams {
+  Indi_Stochastic_Params_M15() : StochParams(indi_stoch_defaults, PERIOD_M15) { shift = 0; }
 } indi_stoch_m15;
 
 // Defines strategy's parameter values for the given pair symbol and timeframe.
