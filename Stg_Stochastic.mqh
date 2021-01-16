@@ -20,8 +20,8 @@ INPUT int Stochastic_OrderCloseTime = -20;        // Order close time in mins (>
 INPUT string __Stochastic_Indi_Stochastic_Parameters__ =
     "-- Stochastic strategy: Stochastic indicator params --";  // >>> Stochastic strategy: Stochastic indicator <<<
 INPUT int Stochastic_Indi_Stochastic_KPeriod = 5;              // K line period
-INPUT int Stochastic_Indi_Stochastic_DPeriod = 5;              // D line period
-INPUT int Stochastic_Indi_Stochastic_Slowing = 5;              // Slowing
+INPUT int Stochastic_Indi_Stochastic_DPeriod = 3;              // D line period
+INPUT int Stochastic_Indi_Stochastic_Slowing = 3;              // Slowing
 INPUT ENUM_MA_METHOD Stochastic_Indi_Stochastic_MA_Method = MODE_SMA;  // Moving Average method
 INPUT ENUM_STO_PRICE Stochastic_Indi_Stochastic_Price_Field = 0;       // Price (0 - Low/High or 1 - Close/Close)
 INPUT int Stochastic_Indi_Stochastic_Shift = 0;                        // Shift

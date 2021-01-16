@@ -5,7 +5,14 @@
 
 // Defines indicator's parameter values for the given pair symbol and timeframe.
 struct Indi_Stochastic_Params_M30 : StochParams {
-  Indi_Stochastic_Params_M30() : StochParams(indi_stoch_defaults, PERIOD_M30) { shift = 0; }
+  Indi_Stochastic_Params_M30() : StochParams(indi_stoch_defaults, PERIOD_M30) {
+    dperiod = 3;
+    kperiod = 5;
+    ma_method = (ENUM_MA_METHOD)0;
+    price_field = (ENUM_STO_PRICE)0;
+    shift = 0;
+    slowing = 3;
+  }
 } indi_stoch_m30;
 
 // Defines strategy's parameter values for the given pair symbol and timeframe.
