@@ -99,23 +99,27 @@ class Stg_Stochastic : public Strategy {
    */
   bool SignalOpen(ENUM_ORDER_TYPE _cmd, int _method = 0, float _level = 0.0f, int _shift = 0) {
     Indi_Stochastic *_indi = Data();
-    bool _is_valid = _indi[CURR].IsValid() && _indi[PREV].IsValid() && _indi[PPREV].IsValid();
+    bool _is_valid = _indi[_shift].IsValid() && _indi[_shift + 1].IsValid() && _indi[_shift + 2].IsValid();
     bool _result = _is_valid;
     if (_is_valid) {
       switch (_cmd) {
         case ORDER_TYPE_BUY:
           // Buy: main line falls below level and goes above the signal line.
-          _result =
-              _indi[CURR][(int)LINE_MAIN] < 50 - _level && _indi[CURR][(int)LINE_MAIN] > _indi[CURR][(int)LINE_SIGNAL];
-          if (METHOD(_method, 0)) _result &= _indi[PPREV][(int)LINE_MAIN] < _indi[PPREV][(int)LINE_SIGNAL];
-          if (METHOD(_method, 1)) _result &= _indi[CURR][0] < _level;
+          _result &= _indi.GetMin<double>(_shift, 3) < 50 - _level;
+          _result &= _indi[_shift][(int)LINE_MAIN] > _indi[_shift][(int)LINE_SIGNAL];
+          if (_result && _method != 0) {
+            if (METHOD(_method, 0)) _result &= _indi[PPREV][(int)LINE_MAIN] < _indi[PPREV][(int)LINE_SIGNAL];
+            if (METHOD(_method, 1)) _result &= _indi[_shift][0] < _level;
+          }
           break;
         case ORDER_TYPE_SELL:
           // Sell: main line rises above level and main line above the signal line.
-          _result =
-              _indi[CURR][(int)LINE_MAIN] > 50 + _level && _indi[CURR][(int)LINE_MAIN] < _indi[CURR][(int)LINE_SIGNAL];
-          if (METHOD(_method, 0)) _result &= _indi[PPREV][(int)LINE_MAIN] > _indi[PPREV][(int)LINE_SIGNAL];
-          if (METHOD(_method, 1)) _result &= _indi[CURR][0] > _level;
+          _result &= _indi.GetMin<double>(_shift, 3) > 50 + _level;
+          _result &= _indi[_shift][(int)LINE_MAIN] < _indi[_shift][(int)LINE_SIGNAL];
+          if (_result && _method != 0) {
+            if (METHOD(_method, 0)) _result &= _indi[_shift + 2][(int)LINE_MAIN] > _indi[_shift + 2][(int)LINE_SIGNAL];
+            if (METHOD(_method, 1)) _result &= _indi[_shift][0] > _level;
+          }
           break;
       }
     }
