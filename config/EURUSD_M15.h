@@ -8,10 +8,10 @@ struct Indi_Stochastic_Params_M15 : StochParams {
   Indi_Stochastic_Params_M15() : StochParams(indi_stoch_defaults, PERIOD_M15) {
     dperiod = 3;
     kperiod = 5;
-    ma_method = (ENUM_MA_METHOD)0;
+    ma_method = (ENUM_MA_METHOD)2;
     price_field = (ENUM_STO_PRICE)0;
     shift = 0;
-    slowing = 3;
+    slowing = 17;
   }
 } indi_stoch_m15;
 

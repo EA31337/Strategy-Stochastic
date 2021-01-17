@@ -1,7 +1,7 @@
 Stochastic_Indi_Stochastic_DPeriod={{ (dperiod | default(0) | int) }}
-Stochastic_Indi_Stochastic_KPeriod,1={{ (kperiod | default(0) | int) - 4 | abs }}
+Stochastic_Indi_Stochastic_KPeriod,1={{ ((kperiod | default(0) | int) - 4) | abs }}
 Stochastic_Indi_Stochastic_KPeriod,2=2
-Stochastic_Indi_Stochastic_KPeriod,3={{ (kperiod | default(0) | int) + 8 | abs }}
+Stochastic_Indi_Stochastic_KPeriod,3={{ (kperiod | default(0) | int) + 8 }}
 Stochastic_Indi_Stochastic_KPeriod,F=1
 Stochastic_Indi_Stochastic_KPeriod={{ (kperiod | default(0) | int) }}
 Stochastic_Indi_Stochastic_MA_Method={{ (ma_method | default(0) | int) }}

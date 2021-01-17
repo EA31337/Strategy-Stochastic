@@ -11,7 +11,7 @@ struct Indi_Stochastic_Params_M30 : StochParams {
     ma_method = (ENUM_MA_METHOD)0;
     price_field = (ENUM_STO_PRICE)0;
     shift = 0;
-    slowing = 3;
+    slowing = 17;
   }
 } indi_stoch_m30;
 
