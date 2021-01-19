@@ -1,4 +1,4 @@
-Stochastic_Indi_Stochastic_DPeriod,1={{ ((dperiod | default(0) | int) - 4) | abs }}
+Stochastic_Indi_Stochastic_DPeriod,1={{ [((dperiod | default(0) | int) - 4), 2] | max }}
 Stochastic_Indi_Stochastic_DPeriod,2=2
 Stochastic_Indi_Stochastic_DPeriod,3={{ (dperiod | default(0) | int) + 8 }}
 Stochastic_Indi_Stochastic_DPeriod,F=1
