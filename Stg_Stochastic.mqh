@@ -4,19 +4,20 @@
  */
 
 // User input params.
-INPUT float Stochastic_LotSize = 0;               // Lot size
-INPUT int Stochastic_SignalOpenMethod = 0;        // Signal open method
-INPUT int Stochastic_SignalOpenLevel = 0.0f;      // Signal open level
-INPUT int Stochastic_SignalOpenFilterMethod = 1;  // Signal open filter method
-INPUT int Stochastic_SignalOpenBoostMethod = 0;   // Signal open boost method
-INPUT int Stochastic_SignalCloseMethod = 0;       // Signal close method
-INPUT int Stochastic_SignalCloseLevel = 0.0f;     // Signal close level
-INPUT int Stochastic_PriceStopMethod = 0;         // Price stop method
-INPUT float Stochastic_PriceStopLevel = 0;        // Price stop level
-INPUT int Stochastic_TickFilterMethod = 1;        // Tick filter method
-INPUT float Stochastic_MaxSpread = 4.0;           // Max spread to trade (pips)
-INPUT int Stochastic_Shift = 0;                   // Shift (relative to the current bar)
-INPUT int Stochastic_OrderCloseTime = -20;        // Order close time in mins (>0) or bars (<0)
+INPUT string __Stochastic_Parameters__ = "-- Stochastic strategy params --";  // >>> Stochastic <<<
+INPUT float Stochastic_LotSize = 0;                                           // Lot size
+INPUT int Stochastic_SignalOpenMethod = 0;                                    // Signal open method
+INPUT int Stochastic_SignalOpenLevel = 0.0f;                                  // Signal open level
+INPUT int Stochastic_SignalOpenFilterMethod = 1;                              // Signal open filter method
+INPUT int Stochastic_SignalOpenBoostMethod = 0;                               // Signal open boost method
+INPUT int Stochastic_SignalCloseMethod = 0;                                   // Signal close method
+INPUT int Stochastic_SignalCloseLevel = 0.0f;                                 // Signal close level
+INPUT int Stochastic_PriceStopMethod = 0;                                     // Price stop method
+INPUT float Stochastic_PriceStopLevel = 0;                                    // Price stop level
+INPUT int Stochastic_TickFilterMethod = 1;                                    // Tick filter method
+INPUT float Stochastic_MaxSpread = 4.0;                                       // Max spread to trade (pips)
+INPUT int Stochastic_Shift = 0;                                               // Shift (relative to the current bar)
+INPUT int Stochastic_OrderCloseTime = -20;  // Order close time in mins (>0) or bars (<0)
 INPUT string __Stochastic_Indi_Stochastic_Parameters__ =
     "-- Stochastic strategy: Stochastic indicator params --";  // >>> Stochastic strategy: Stochastic indicator <<<
 INPUT int Stochastic_Indi_Stochastic_KPeriod = 5;              // K line period
