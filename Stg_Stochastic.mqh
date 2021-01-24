@@ -91,7 +91,6 @@ class Stg_Stochastic : public Strategy {
     _stg_params.SetTf(_tf, _Symbol);
     // Initialize strategy instance.
     Strategy *_strat = new Stg_Stochastic(_stg_params, "Stochastic");
-    _stg_params.SetStops(_strat, _strat);
     return _strat;
   }
 
