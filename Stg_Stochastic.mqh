@@ -76,12 +76,12 @@ class Stg_Stochastic : public Strategy {
     // Initialize strategy initial values.
     StochParams _indi_params(indi_stoch_defaults, _tf);
     StgParams _stg_params(stg_stoch_defaults);
-    if (!Terminal::IsOptimization()) {
-      SetParamsByTf<StochParams>(_indi_params, _tf, indi_stoch_m1, indi_stoch_m5, indi_stoch_m15, indi_stoch_m30,
-                                 indi_stoch_h1, indi_stoch_h4, indi_stoch_h8);
-      SetParamsByTf<StgParams>(_stg_params, _tf, stg_stoch_m1, stg_stoch_m5, stg_stoch_m15, stg_stoch_m30, stg_stoch_h1,
-                               stg_stoch_h4, stg_stoch_h8);
-    }
+#ifdef __config__
+    SetParamsByTf<StochParams>(_indi_params, _tf, indi_stoch_m1, indi_stoch_m5, indi_stoch_m15, indi_stoch_m30,
+                               indi_stoch_h1, indi_stoch_h4, indi_stoch_h8);
+    SetParamsByTf<StgParams>(_stg_params, _tf, stg_stoch_m1, stg_stoch_m5, stg_stoch_m15, stg_stoch_m30, stg_stoch_h1,
+                             stg_stoch_h4, stg_stoch_h8);
+#endif
     // Initialize indicator.
     StochParams stoch_params(_indi_params);
     _stg_params.SetIndicator(new Indi_Stochastic(_indi_params));
