@@ -4,19 +4,20 @@
  */
 
 // User input params.
-INPUT float Stochastic_LotSize = 0;               // Lot size
-INPUT int Stochastic_SignalOpenMethod = 0;        // Signal open method
-INPUT int Stochastic_SignalOpenLevel = 0.0f;      // Signal open level
-INPUT int Stochastic_SignalOpenFilterMethod = 1;  // Signal open filter method
-INPUT int Stochastic_SignalOpenBoostMethod = 0;   // Signal open boost method
-INPUT int Stochastic_SignalCloseMethod = 0;       // Signal close method
-INPUT int Stochastic_SignalCloseLevel = 0.0f;     // Signal close level
-INPUT int Stochastic_PriceStopMethod = 0;         // Price stop method
-INPUT float Stochastic_PriceStopLevel = 0;        // Price stop level
-INPUT int Stochastic_TickFilterMethod = 1;        // Tick filter method
-INPUT float Stochastic_MaxSpread = 4.0;           // Max spread to trade (pips)
-INPUT int Stochastic_Shift = 0;                   // Shift (relative to the current bar)
-INPUT int Stochastic_OrderCloseTime = -20;        // Order close time in mins (>0) or bars (<0)
+INPUT string __Stochastic_Parameters__ = "-- Stochastic strategy params --";  // >>> Stochastic <<<
+INPUT float Stochastic_LotSize = 0;                                           // Lot size
+INPUT int Stochastic_SignalOpenMethod = 0;                                    // Signal open method
+INPUT int Stochastic_SignalOpenLevel = 0.0f;                                  // Signal open level
+INPUT int Stochastic_SignalOpenFilterMethod = 1;                              // Signal open filter method
+INPUT int Stochastic_SignalOpenBoostMethod = 0;                               // Signal open boost method
+INPUT int Stochastic_SignalCloseMethod = 0;                                   // Signal close method
+INPUT int Stochastic_SignalCloseLevel = 0.0f;                                 // Signal close level
+INPUT int Stochastic_PriceStopMethod = 0;                                     // Price stop method
+INPUT float Stochastic_PriceStopLevel = 0;                                    // Price stop level
+INPUT int Stochastic_TickFilterMethod = 1;                                    // Tick filter method
+INPUT float Stochastic_MaxSpread = 4.0;                                       // Max spread to trade (pips)
+INPUT int Stochastic_Shift = 0;                                               // Shift (relative to the current bar)
+INPUT int Stochastic_OrderCloseTime = -20;  // Order close time in mins (>0) or bars (<0)
 INPUT string __Stochastic_Indi_Stochastic_Parameters__ =
     "-- Stochastic strategy: Stochastic indicator params --";  // >>> Stochastic strategy: Stochastic indicator <<<
 INPUT int Stochastic_Indi_Stochastic_KPeriod = 5;              // K line period
@@ -75,12 +76,12 @@ class Stg_Stochastic : public Strategy {
     // Initialize strategy initial values.
     StochParams _indi_params(indi_stoch_defaults, _tf);
     StgParams _stg_params(stg_stoch_defaults);
-    if (!Terminal::IsOptimization()) {
-      SetParamsByTf<StochParams>(_indi_params, _tf, indi_stoch_m1, indi_stoch_m5, indi_stoch_m15, indi_stoch_m30,
-                                 indi_stoch_h1, indi_stoch_h4, indi_stoch_h8);
-      SetParamsByTf<StgParams>(_stg_params, _tf, stg_stoch_m1, stg_stoch_m5, stg_stoch_m15, stg_stoch_m30, stg_stoch_h1,
-                               stg_stoch_h4, stg_stoch_h8);
-    }
+#ifdef __config__
+    SetParamsByTf<StochParams>(_indi_params, _tf, indi_stoch_m1, indi_stoch_m5, indi_stoch_m15, indi_stoch_m30,
+                               indi_stoch_h1, indi_stoch_h4, indi_stoch_h8);
+    SetParamsByTf<StgParams>(_stg_params, _tf, stg_stoch_m1, stg_stoch_m5, stg_stoch_m15, stg_stoch_m30, stg_stoch_h1,
+                             stg_stoch_h4, stg_stoch_h8);
+#endif
     // Initialize indicator.
     StochParams stoch_params(_indi_params);
     _stg_params.SetIndicator(new Indi_Stochastic(_indi_params));
@@ -90,7 +91,6 @@ class Stg_Stochastic : public Strategy {
     _stg_params.SetTf(_tf, _Symbol);
     // Initialize strategy instance.
     Strategy *_strat = new Stg_Stochastic(_stg_params, "Stochastic");
-    _stg_params.SetStops(_strat, _strat);
     return _strat;
   }
 
