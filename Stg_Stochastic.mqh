@@ -16,7 +16,7 @@ INPUT int Stochastic_PriceStopMethod = 0;                                     //
 INPUT float Stochastic_PriceStopLevel = 0;                                    // Price stop level
 INPUT int Stochastic_TickFilterMethod = 1;                                    // Tick filter method
 INPUT float Stochastic_MaxSpread = 4.0;                                       // Max spread to trade (pips)
-INPUT int Stochastic_Shift = 0;                                               // Shift (relative to the current bar)
+INPUT short Stochastic_Shift = 0;                                             // Shift (relative to the current bar)
 INPUT int Stochastic_OrderCloseTime = -20;  // Order close time in mins (>0) or bars (<0)
 INPUT string __Stochastic_Indi_Stochastic_Parameters__ =
     "-- Stochastic strategy: Stochastic indicator params --";  // >>> Stochastic strategy: Stochastic indicator <<<
