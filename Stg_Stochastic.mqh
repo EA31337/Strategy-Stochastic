@@ -70,7 +70,8 @@ struct Stg_Stochastic_Params : StgParams {
 
 class Stg_Stochastic : public Strategy {
  public:
-  Stg_Stochastic(StgParams &_params, Trade *_trade = NULL, string _name = "") : Strategy(_params, _trade, _name) {}
+  Stg_Stochastic(StgParams &_sparams, TradeParams &_tparams, ChartParams &_cparams, string _name = "")
+      : Strategy(_sparams, _tparams, _cparams, _name) {}
 
   static Stg_Stochastic *Init(ENUM_TIMEFRAMES _tf = NULL, long _magic_no = NULL, ENUM_LOG_LEVEL _log_level = V_INFO) {
     // Initialize strategy initial values.
@@ -86,8 +87,9 @@ class Stg_Stochastic : public Strategy {
     StochParams stoch_params(_indi_params);
     _stg_params.SetIndicator(new Indi_Stochastic(_indi_params));
     // Initialize Strategy instance.
+    ChartParams _cparams(_tf, _Symbol);
     TradeParams _tparams(_magic_no, _log_level);
-    Strategy *_strat = new Stg_Stochastic(_stg_params, new Trade(new Chart(_tf, _Symbol)), "Stochastic");
+    Strategy *_strat = new Stg_Stochastic(_stg_params, _tparams, _cparams, "Stochastic");
     return _strat;
   }
 
