@@ -53,7 +53,7 @@ struct Stg_Stochastic_Params : StgParams {
 
   // Struct constructors.
   Stg_Stochastic_Params(StochParams &_iparams, StgParams &_sparams)
-      : iparams(indi_stoch_defaults, _iparams.tf), sparams(stg_stoch_defaults) {
+      : iparams(indi_stoch_defaults, _iparams.tf.GetTf()), sparams(stg_stoch_defaults) {
     iparams = _iparams;
     sparams = _sparams;
   }
