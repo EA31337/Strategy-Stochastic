@@ -22,10 +22,10 @@ struct Stg_Stochastic_Params_M30 : StgParams {
     lot_size = 0;
     signal_open_method = 2;
     signal_open_filter = 32;
-    signal_open_level = (float)0;
+    signal_open_level = (float)20;
     signal_open_boost = 0;
     signal_close_method = 2;
-    signal_close_level = (float)0;
+    signal_close_level = (float)20;
     price_profit_method = 60;
     price_profit_level = (float)6;
     price_stop_method = 60;

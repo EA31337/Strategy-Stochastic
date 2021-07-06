@@ -8,7 +8,7 @@ INPUT string __Stochastic_Parameters__ = "-- Stochastic strategy params --";  //
 INPUT float Stochastic_LotSize = 0;                                           // Lot size
 INPUT int Stochastic_SignalOpenMethod = 2;                                    // Signal open method
 INPUT int Stochastic_SignalOpenLevel = 0.0f;                                  // Signal open level
-INPUT int Stochastic_SignalOpenFilterMethod = 32;                              // Signal open filter method
+INPUT int Stochastic_SignalOpenFilterMethod = 32;                             // Signal open filter method
 INPUT int Stochastic_SignalOpenBoostMethod = 0;                               // Signal open boost method
 INPUT int Stochastic_SignalCloseMethod = 2;                                   // Signal close method
 INPUT int Stochastic_SignalCloseLevel = 0.0f;                                 // Signal close level
@@ -101,24 +101,19 @@ class Stg_Stochastic : public Strategy {
     bool _is_valid = _indi[_shift].IsValid() && _indi[_shift + 1].IsValid() && _indi[_shift + 2].IsValid();
     bool _result = _is_valid;
     if (_is_valid) {
+      IndicatorSignal _signals = _indi.GetSignals(4, _shift, LINE_MAIN, LINE_SIGNAL);
       switch (_cmd) {
         case ORDER_TYPE_BUY:
           // Buy: main line falls below level and goes above the signal line.
-          _result &= _indi.GetMin<double>(_shift, 3) < 50 - _level;
-          _result &= _indi[_shift][(int)LINE_MAIN] > _indi[_shift][(int)LINE_SIGNAL];
-          if (_result && _method != 0) {
-            if (METHOD(_method, 0)) _result &= _indi[PPREV][(int)LINE_MAIN] < _indi[PPREV][(int)LINE_SIGNAL];
-            if (METHOD(_method, 1)) _result &= _indi[_shift][0] < _level;
-          }
+          _result &= _indi.GetMin<double>(_shift, 4) < 50 - _level;
+          _result &= _indi[_shift][(int)LINE_SIGNAL] < _indi[_shift][(int)LINE_MAIN];
+          _result &= _method > 0 ? _signals.CheckSignals(_method) : _signals.CheckSignalsAll(-_method);
           break;
         case ORDER_TYPE_SELL:
           // Sell: main line rises above level and main line above the signal line.
-          _result &= _indi.GetMin<double>(_shift, 3) > 50 + _level;
-          _result &= _indi[_shift][(int)LINE_MAIN] < _indi[_shift][(int)LINE_SIGNAL];
-          if (_result && _method != 0) {
-            if (METHOD(_method, 0)) _result &= _indi[_shift + 2][(int)LINE_MAIN] > _indi[_shift + 2][(int)LINE_SIGNAL];
-            if (METHOD(_method, 1)) _result &= _indi[_shift][0] > _level;
-          }
+          _result &= _indi.GetMin<double>(_shift, 4) > 50 + _level;
+          _result &= _indi[_shift][(int)LINE_SIGNAL] > _indi[_shift][(int)LINE_MAIN];
+          _result &= _method > 0 ? _signals.CheckSignals(_method) : _signals.CheckSignalsAll(-_method);
           break;
       }
     }
