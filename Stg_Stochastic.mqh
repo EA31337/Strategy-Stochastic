@@ -11,6 +11,7 @@ INPUT int Stochastic_SignalOpenLevel = 0.0f;       // Signal open level
 INPUT int Stochastic_SignalOpenFilterMethod = 32;  // Signal open filter method
 INPUT int Stochastic_SignalOpenBoostMethod = 0;    // Signal open boost method
 INPUT int Stochastic_SignalCloseMethod = 2;        // Signal close method
+INPUT int Stochastic_SignalCloseFilter = 0;        // Signal close filter (-127-127)
 INPUT int Stochastic_SignalCloseLevel = 0.0f;      // Signal close level
 INPUT int Stochastic_PriceStopMethod = 1;          // Price stop method
 INPUT float Stochastic_PriceStopLevel = 0;         // Price stop level
@@ -40,9 +41,10 @@ struct Indi_Stochastic_Params_Defaults : StochParams {
 struct Stg_Stochastic_Params_Defaults : StgParams {
   Stg_Stochastic_Params_Defaults()
       : StgParams(::Stochastic_SignalOpenMethod, ::Stochastic_SignalOpenFilterMethod, ::Stochastic_SignalOpenLevel,
-                  ::Stochastic_SignalOpenBoostMethod, ::Stochastic_SignalCloseMethod, ::Stochastic_SignalCloseLevel,
-                  ::Stochastic_PriceStopMethod, ::Stochastic_PriceStopLevel, ::Stochastic_TickFilterMethod,
-                  ::Stochastic_MaxSpread, ::Stochastic_Shift, ::Stochastic_OrderCloseTime) {}
+                  ::Stochastic_SignalOpenBoostMethod, ::Stochastic_SignalCloseMethod, ::Stochastic_SignalCloseFilter,
+                  ::Stochastic_SignalCloseLevel, ::Stochastic_PriceStopMethod, ::Stochastic_PriceStopLevel,
+                  ::Stochastic_TickFilterMethod, ::Stochastic_MaxSpread, ::Stochastic_Shift,
+                  ::Stochastic_OrderCloseTime) {}
 } stg_stoch_defaults;
 
 // Struct to define strategy parameters to override.
