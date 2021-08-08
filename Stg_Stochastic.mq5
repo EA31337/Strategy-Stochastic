@@ -20,7 +20,7 @@ input bool Info_On_Chart = true;          // Display info on chart.
 #include "Stg_Stochastic.mqh"
 
 // Defines.
-#define ea_name "Stg_Stochastic"
+#define ea_name "Strategy Stochastic"
 #define ea_version "1.004"
 #define ea_desc "Strategy based on EA31337 framework."
 #define ea_link "https://github.com/EA31337/Strategy-Stochastic"
