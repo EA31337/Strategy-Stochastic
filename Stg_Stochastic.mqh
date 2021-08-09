@@ -9,6 +9,7 @@ INPUT float Stochastic_LotSize = 0;                // Lot size
 INPUT int Stochastic_SignalOpenMethod = 2;         // Signal open method
 INPUT int Stochastic_SignalOpenLevel = 0.0f;       // Signal open level
 INPUT int Stochastic_SignalOpenFilterMethod = 32;  // Signal open filter method
+INPUT int Stochastic_SignalOpenFilterTime = 6;     // Signal open filter time
 INPUT int Stochastic_SignalOpenBoostMethod = 0;    // Signal open boost method
 INPUT int Stochastic_SignalCloseMethod = 2;        // Signal close method
 INPUT int Stochastic_SignalCloseFilter = 0;        // Signal close filter (-127-127)
@@ -49,6 +50,7 @@ struct Stg_Stochastic_Params_Defaults : StgParams {
     Set(STRAT_PARAM_OCL, Stochastic_OrderCloseLoss);
     Set(STRAT_PARAM_OCP, Stochastic_OrderCloseProfit);
     Set(STRAT_PARAM_OCT, Stochastic_OrderCloseTime);
+    Set(STRAT_PARAM_SOFT, Stochastic_SignalOpenFilterTime);
   }
 } stg_stoch_defaults;
 
