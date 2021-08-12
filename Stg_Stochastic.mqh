@@ -6,26 +6,26 @@
 // User input params.
 INPUT_GROUP("Stochastic strategy: strategy params");
 INPUT float Stochastic_LotSize = 0;                // Lot size
-INPUT int Stochastic_SignalOpenMethod = 2;         // Signal open method
-INPUT int Stochastic_SignalOpenLevel = 0.0f;       // Signal open level
+INPUT int Stochastic_SignalOpenMethod = 0;         // Signal open method
+INPUT int Stochastic_SignalOpenLevel = 30.0f;      // Signal open level
 INPUT int Stochastic_SignalOpenFilterMethod = 32;  // Signal open filter method
-INPUT int Stochastic_SignalOpenFilterTime = 6;     // Signal open filter time
+INPUT int Stochastic_SignalOpenFilterTime = 8;     // Signal open filter time
 INPUT int Stochastic_SignalOpenBoostMethod = 0;    // Signal open boost method
-INPUT int Stochastic_SignalCloseMethod = 2;        // Signal close method
-INPUT int Stochastic_SignalCloseFilter = 0;        // Signal close filter (-127-127)
-INPUT int Stochastic_SignalCloseLevel = 0.0f;      // Signal close level
-INPUT int Stochastic_PriceStopMethod = 1;          // Price stop method
+INPUT int Stochastic_SignalCloseMethod = 0;        // Signal close method
+INPUT int Stochastic_SignalCloseFilter = 32;       // Signal close filter (-127-127)
+INPUT int Stochastic_SignalCloseLevel = 30.0f;     // Signal close level
+INPUT int Stochastic_PriceStopMethod = 1;          // Price stop method (0-127)
 INPUT float Stochastic_PriceStopLevel = 0;         // Price stop level
 INPUT int Stochastic_TickFilterMethod = 1;         // Tick filter method
 INPUT float Stochastic_MaxSpread = 4.0;            // Max spread to trade (pips)
-INPUT short Stochastic_Shift = 0;                  // Shift (relative to the current bar)
+INPUT short Stochastic_Shift = 0;                  // Shift
 INPUT float Stochastic_OrderCloseLoss = 0;         // Order close loss
 INPUT float Stochastic_OrderCloseProfit = 0;       // Order close profit
-INPUT int Stochastic_OrderCloseTime = -20;         // Order close time in mins (>0) or bars (<0)
+INPUT int Stochastic_OrderCloseTime = -30;         // Order close time in mins (>0) or bars (<0)
 INPUT_GROUP("Stochastic strategy: Stochastic indicator params");
-INPUT int Stochastic_Indi_Stochastic_KPeriod = 5;                      // K line period
-INPUT int Stochastic_Indi_Stochastic_DPeriod = 3;                      // D line period
-INPUT int Stochastic_Indi_Stochastic_Slowing = 3;                      // Slowing
+INPUT int Stochastic_Indi_Stochastic_KPeriod = 8;                      // K line period
+INPUT int Stochastic_Indi_Stochastic_DPeriod = 12;                     // D line period
+INPUT int Stochastic_Indi_Stochastic_Slowing = 12;                     // Slowing
 INPUT ENUM_MA_METHOD Stochastic_Indi_Stochastic_MA_Method = MODE_SMA;  // Moving Average method
 INPUT ENUM_STO_PRICE Stochastic_Indi_Stochastic_Price_Field = 0;       // Price (0 - Low/High or 1 - Close/Close)
 INPUT int Stochastic_Indi_Stochastic_Shift = 0;                        // Shift
@@ -106,7 +106,8 @@ class Stg_Stochastic : public Strategy {
    */
   bool SignalOpen(ENUM_ORDER_TYPE _cmd, int _method = 0, float _level = 0.0f, int _shift = 0) {
     Indi_Stochastic *_indi = GetIndicator();
-    bool _result = _indi.GetFlag(INDI_ENTRY_FLAG_IS_VALID);
+    bool _result =
+        _indi.GetFlag(INDI_ENTRY_FLAG_IS_VALID, _shift) && _indi.GetFlag(INDI_ENTRY_FLAG_IS_VALID, _shift + 2);
     if (!_result) {
       // Returns false when indicator data is not valid.
       return false;
@@ -117,12 +118,18 @@ class Stg_Stochastic : public Strategy {
         // Buy: main line falls below level and goes above the signal line.
         _result &= _indi.GetMin<double>(_shift, 4) < 50 - _level;
         _result &= _indi[_shift][(int)LINE_SIGNAL] < _indi[_shift][(int)LINE_MAIN];
+        _result &= _indi.IsIncreasing(2, LINE_MAIN, _shift);
+        _result &= _indi.IsIncreasing(2, LINE_SIGNAL, _shift);
+        _result &= _indi.IsIncByPct(_level / 10, LINE_SIGNAL, _shift, 3);
         _result &= _method > 0 ? _signals.CheckSignals(_method) : _signals.CheckSignalsAll(-_method);
         break;
       case ORDER_TYPE_SELL:
         // Sell: main line rises above level and main line above the signal line.
-        _result &= _indi.GetMin<double>(_shift, 4) > 50 + _level;
+        _result &= _indi.GetMax<double>(_shift, 4) > 50 + _level;
         _result &= _indi[_shift][(int)LINE_SIGNAL] > _indi[_shift][(int)LINE_MAIN];
+        _result &= _indi.IsDecreasing(2, LINE_MAIN, _shift);
+        _result &= _indi.IsDecreasing(2, LINE_SIGNAL, _shift);
+        _result &= _indi.IsDecByPct(_level / 10, LINE_SIGNAL, _shift, 3);
         _result &= _method > 0 ? _signals.CheckSignals(_method) : _signals.CheckSignalsAll(-_method);
         break;
     }
