@@ -47,6 +47,7 @@ struct Stg_Stochastic_Params_Defaults : StgParams {
                   ::Stochastic_SignalOpenBoostMethod, ::Stochastic_SignalCloseMethod, ::Stochastic_SignalCloseFilter,
                   ::Stochastic_SignalCloseLevel, ::Stochastic_PriceStopMethod, ::Stochastic_PriceStopLevel,
                   ::Stochastic_TickFilterMethod, ::Stochastic_MaxSpread, ::Stochastic_Shift) {
+    Set(STRAT_PARAM_LS, Stochastic_LotSize);
     Set(STRAT_PARAM_OCL, Stochastic_OrderCloseLoss);
     Set(STRAT_PARAM_OCP, Stochastic_OrderCloseProfit);
     Set(STRAT_PARAM_OCT, Stochastic_OrderCloseTime);
