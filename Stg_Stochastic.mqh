@@ -55,19 +55,6 @@ struct Stg_Stochastic_Params_Defaults : StgParams {
   }
 } stg_stoch_defaults;
 
-// Struct to define strategy parameters to override.
-struct Stg_Stochastic_Params : StgParams {
-  StochParams iparams;
-  StgParams sparams;
-
-  // Struct constructors.
-  Stg_Stochastic_Params(StochParams &_iparams, StgParams &_sparams)
-      : iparams(indi_stoch_defaults, _iparams.tf.GetTf()), sparams(stg_stoch_defaults) {
-    iparams = _iparams;
-    sparams = _sparams;
-  }
-};
-
 #ifdef __config__
 // Loads pair specific param values.
 #include "config/H1.h"
