@@ -84,7 +84,6 @@ class Stg_Stochastic : public Strategy {
                              stg_stoch_h4, stg_stoch_h8);
 #endif
     // Initialize indicator.
-    StochParams stoch_params(_indi_params);
     _stg_params.SetIndicator(new Indi_Stochastic(_indi_params));
     // Initialize Strategy instance.
     ChartParams _cparams(_tf, _Symbol);
