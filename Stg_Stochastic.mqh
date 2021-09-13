@@ -38,7 +38,7 @@ struct Indi_Stochastic_Params_Defaults : StochParams {
       : StochParams(::Stochastic_Indi_Stochastic_KPeriod, ::Stochastic_Indi_Stochastic_DPeriod,
                     ::Stochastic_Indi_Stochastic_Slowing, ::Stochastic_Indi_Stochastic_MA_Method,
                     ::Stochastic_Indi_Stochastic_Price_Field, ::Stochastic_Indi_Stochastic_Shift) {}
-} indi_stoch_defaults;
+};
 
 // Defines struct with default user strategy values.
 struct Stg_Stochastic_Params_Defaults : StgParams {
@@ -53,7 +53,7 @@ struct Stg_Stochastic_Params_Defaults : StgParams {
     Set(STRAT_PARAM_OCT, Stochastic_OrderCloseTime);
     Set(STRAT_PARAM_SOFT, Stochastic_SignalOpenFilterTime);
   }
-} stg_stoch_defaults;
+};
 
 #ifdef __config__
 // Loads pair specific param values.
@@ -73,7 +73,9 @@ class Stg_Stochastic : public Strategy {
 
   static Stg_Stochastic *Init(ENUM_TIMEFRAMES _tf = NULL) {
     // Initialize strategy initial values.
+    Indi_Stochastic_Params_Defaults indi_stoch_defaults;
     StochParams _indi_params(indi_stoch_defaults, _tf);
+    Stg_Stochastic_Params_Defaults stg_stoch_defaults;
     StgParams _stg_params(stg_stoch_defaults);
 #ifdef __config__
     SetParamsByTf<StochParams>(_indi_params, _tf, indi_stoch_m1, indi_stoch_m5, indi_stoch_m15, indi_stoch_m30,
