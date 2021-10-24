@@ -4,8 +4,8 @@
  */
 
 // Defines indicator's parameter values for the given pair symbol and timeframe.
-struct Indi_Stochastic_Params_H8 : StochParams {
-  Indi_Stochastic_Params_H8() : StochParams(indi_stoch_defaults, PERIOD_H8) {
+struct Indi_Stochastic_Params_H8 : IndiStochParams {
+  Indi_Stochastic_Params_H8() : IndiStochParams(indi_stoch_defaults, PERIOD_H8) {
     dperiod = 3;
     kperiod = 5;
     ma_method = (ENUM_MA_METHOD)0;
