@@ -73,13 +73,9 @@ class Stg_Stochastic : public Strategy {
 
   static Stg_Stochastic *Init(ENUM_TIMEFRAMES _tf = NULL) {
     // Initialize strategy initial values.
-    Indi_Stochastic_Params_Defaults indi_stoch_defaults;
-    IndiStochParams _indi_params(indi_stoch_defaults, _tf);
     Stg_Stochastic_Params_Defaults stg_stoch_defaults;
     StgParams _stg_params(stg_stoch_defaults);
 #ifdef __config__
-    SetParamsByTf<IndiStochParams>(_indi_params, _tf, indi_stoch_m1, indi_stoch_m5, indi_stoch_m15, indi_stoch_m30,
-                                   indi_stoch_h1, indi_stoch_h4, indi_stoch_h8);
     SetParamsByTf<StgParams>(_stg_params, _tf, stg_stoch_m1, stg_stoch_m5, stg_stoch_m15, stg_stoch_m30, stg_stoch_h1,
                              stg_stoch_h4, stg_stoch_h8);
 #endif
@@ -88,8 +84,16 @@ class Stg_Stochastic : public Strategy {
     ChartParams _cparams(_tf, _Symbol);
     TradeParams _tparams;
     Strategy *_strat = new Stg_Stochastic(_stg_params, _tparams, _cparams, "Stochastic");
-    _strat.SetIndicator(new Indi_Stochastic(_indi_params));
     return _strat;
+  }
+
+  /**
+   * Event on strategy's init.
+   */
+  void OnInit() {
+    Indi_Stochastic_Params_Defaults indi_stoch_defaults;
+    IndiStochParams _indi_params(indi_stoch_defaults, Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
+    SetIndicator(new Indi_Stochastic(_indi_params));
   }
 
   /**
