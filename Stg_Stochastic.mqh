@@ -32,14 +32,6 @@ INPUT int Stochastic_Indi_Stochastic_Shift = 0;                        // Shift
 
 // Structs.
 
-// Defines struct with default user indicator values.
-struct Indi_Stochastic_Params_Defaults : IndiStochParams {
-  Indi_Stochastic_Params_Defaults()
-      : IndiStochParams(::Stochastic_Indi_Stochastic_KPeriod, ::Stochastic_Indi_Stochastic_DPeriod,
-                        ::Stochastic_Indi_Stochastic_Slowing, ::Stochastic_Indi_Stochastic_MA_Method,
-                        ::Stochastic_Indi_Stochastic_Price_Field, ::Stochastic_Indi_Stochastic_Shift) {}
-};
-
 // Defines struct with default user strategy values.
 struct Stg_Stochastic_Params_Defaults : StgParams {
   Stg_Stochastic_Params_Defaults()
@@ -91,8 +83,10 @@ class Stg_Stochastic : public Strategy {
    * Event on strategy's init.
    */
   void OnInit() {
-    Indi_Stochastic_Params_Defaults indi_stoch_defaults;
-    IndiStochParams _indi_params(indi_stoch_defaults, Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
+    IndiStochParams _indi_params(::Stochastic_Indi_Stochastic_KPeriod, ::Stochastic_Indi_Stochastic_DPeriod,
+                                 ::Stochastic_Indi_Stochastic_Slowing, ::Stochastic_Indi_Stochastic_MA_Method,
+                                 ::Stochastic_Indi_Stochastic_Price_Field, ::Stochastic_Indi_Stochastic_Shift);
+    _indi_params.SetTf(Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
     SetIndicator(new Indi_Stochastic(_indi_params));
   }
 
