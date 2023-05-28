@@ -63,7 +63,7 @@ class Stg_Stochastic : public Strategy {
   Stg_Stochastic(StgParams &_sparams, TradeParams &_tparams, ChartParams &_cparams, string _name = "")
       : Strategy(_sparams, _tparams, _cparams, _name) {}
 
-  static Stg_Stochastic *Init(ENUM_TIMEFRAMES _tf = NULL) {
+  static Stg_Stochastic *Init(ENUM_TIMEFRAMES _tf = NULL, EA* _ea = NULL) {
     // Initialize strategy initial values.
     Stg_Stochastic_Params_Defaults stg_stoch_defaults;
     StgParams _stg_params(stg_stoch_defaults);
